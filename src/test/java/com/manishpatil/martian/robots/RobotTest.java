@@ -31,7 +31,7 @@ class RobotTest {
         String position = robot.getPosition();
 
         String expectedPosition = "10 20 E";
-        assertTrue(expectedPosition.equals(position), "Robot is not initialized successfully!");
+        assertEquals(expectedPosition, position, "Robot is not initialized successfully!");
     }
 
     @DisplayName("Robot's initialization throw an exception in case it ia attempted to placeRobot outside of Surface.")
@@ -40,9 +40,7 @@ class RobotTest {
         Robot robot = new Robot();
         Coordinates coordinates = new Coordinates(100, 200);
 
-        Exception exception = Assertions.assertThrows(RuntimeException.class, () -> {
-            robot.init(surface, coordinates, Direction.East);
-        });
+        Exception exception = Assertions.assertThrows(RuntimeException.class, () -> robot.init(surface, coordinates, Direction.East));
 
         assertEquals("Robot cannot initialised on Off-Grid coordinates.", exception.getMessage());
     }
@@ -55,9 +53,7 @@ class RobotTest {
         robot.init(surface, coordinates, Direction.East);
 
         Coordinates newCoordinates = new Coordinates(20, 30);
-        Exception exception = Assertions.assertThrows(RuntimeException.class, () -> {
-            robot.init(surface, newCoordinates, Direction.East);
-        });
+        Exception exception = Assertions.assertThrows(RuntimeException.class, () -> robot.init(surface, newCoordinates, Direction.East));
 
         assertEquals("Robot does not support re-initialization.", exception.getMessage());
     }

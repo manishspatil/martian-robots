@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class SurfaceTest {
 
-    private Surface surface = Surface.getInstance();
+    private final Surface surface = Surface.getInstance();
 
     @BeforeEach
     void setUp() {
@@ -19,8 +19,8 @@ class SurfaceTest {
     void testLowerLeftCoordinates() {
         Coordinates lowerLeftCoordinates = surface.getLowerLeftCoordinates();
 
-        assertTrue(lowerLeftCoordinates.getX() == 0, "Lower Left X Coordinate is not equal to 0.");
-        assertTrue(lowerLeftCoordinates.getY() == 0, "Lower Left Y Coordinate is not equal to 0.");
+        assertEquals(0, lowerLeftCoordinates.getX(), "Lower Left X Coordinate is not equal to 0.");
+        assertEquals(0, lowerLeftCoordinates.getY(), "Lower Left Y Coordinate is not equal to 0.");
     }
 
     @DisplayName("Surface's initialization must initialize successfully with Upper Right Coordinates.")
@@ -32,19 +32,17 @@ class SurfaceTest {
         Coordinates upperRightCoordinates = surface.getUpperRightCoordinates();
 
         assertTrue(surface.isInitialized(), "Surface's state is not initialized!");
-        assertTrue(lowerLeftCoordinates.getX() == 0, "Lower Left X Coordinate is not equal to 0.");
-        assertTrue(lowerLeftCoordinates.getY() == 0, "Lower Left Y Coordinate is not equal to 0.");
-        assertTrue(upperRightCoordinates.getX() == 50, "Upper Right X Coordinate is not equal to 50.");
-        assertTrue(upperRightCoordinates.getY() == 50, "Upper Right Y Coordinate is not equal to 50.");
+        assertEquals(0, lowerLeftCoordinates.getX(),"Lower Left X Coordinate is not equal to 0.");
+        assertEquals(0, lowerLeftCoordinates.getY(), "Lower Left Y Coordinate is not equal to 0.");
+        assertEquals(50, upperRightCoordinates.getX(), "Upper Right X Coordinate is not equal to 50.");
+        assertEquals(50, upperRightCoordinates.getY(), "Upper Right Y Coordinate is not equal to 50.");
     }
 
     @DisplayName("Surface's re-initialization must throws exception.")
     @Test
     @Order(3)
     void testExpectedExceptionForReInitialization() {
-        Exception exception = Assertions.assertThrows(RuntimeException.class, () -> {
-            surface.init(20, 30);
-        });
+        Exception exception = Assertions.assertThrows(RuntimeException.class, () -> surface.init(20, 30));
 
         assertEquals("Surface does not support re-initialization.", exception.getMessage());
     }
