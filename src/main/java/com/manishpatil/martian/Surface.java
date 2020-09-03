@@ -42,10 +42,10 @@ public class Surface {
     }
 
     public void init(int upperRightX, int upperRightY) {
-        if (upperRightCoordinates != null) {
+        System.err.println("In Surface.init");
+        if (isInitialized()) {
             throw new RuntimeException("Surface does not support re-initialization.");
         }
-
         setSize(upperRightX, upperRightY);
     }
 
@@ -56,8 +56,8 @@ public class Surface {
     public boolean isOnGrid(Coordinates coordinates) {
         int xPosition = coordinates.getX();
         int yPosition = coordinates.getY();
-        return ((xPosition >= lowerLeftCoordinates.getX() && xPosition <= upperRightCoordinates.getX())
-                && (yPosition >= lowerLeftCoordinates.getY() && yPosition <= upperRightCoordinates.getY())) ? true : false;
+        return (xPosition >= lowerLeftCoordinates.getX() && xPosition <= upperRightCoordinates.getX())
+                && (yPosition >= lowerLeftCoordinates.getY() && yPosition <= upperRightCoordinates.getY());
     }
 
     public void placeRobot(Robot robot) {
@@ -77,6 +77,6 @@ public class Surface {
     }
 
     private boolean isSizeValid(int upperRightX, int upperRightY) {
-        return (upperRightX > 0 && upperRightX <= MAX_UPPER_RIGHT_X_COORDINATE && upperRightY > 0 && upperRightY <= MAX_UPPER_RIGHT_Y_COORDINATE) ? true : false;
+        return upperRightX > 0 && upperRightX <= MAX_UPPER_RIGHT_X_COORDINATE && upperRightY > 0 && upperRightY <= MAX_UPPER_RIGHT_Y_COORDINATE;
     }
 }

@@ -5,19 +5,24 @@ import com.manishpatil.martian.Direction;
 import com.manishpatil.martian.Surface;
 import org.junit.jupiter.api.*;
 
+import java.lang.reflect.Field;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class RobotTest {
 
-    Surface surface = Surface.getInstance();
+    private static Surface surface;
 
-    @BeforeEach
-    void setUp() {
-        if (!surface.isInitialized()) {
-            surface.init(50, 50);
-        }
+    @BeforeAll
+    static void init() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+        Field instance = Surface.class.getDeclaredField("instance");
+        instance.setAccessible(true);
+        instance.set(null, null);
+
+        surface = Surface.getInstance();
+        surface.init(50, 50);
     }
-
+    
     @AfterEach
     void tearDown() {
     }

@@ -2,6 +2,8 @@ package com.manishpatil.martian;
 
 import org.junit.jupiter.api.*;
 
+import java.lang.reflect.Field;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -9,8 +11,11 @@ class SurfaceTest {
 
     private final Surface surface = Surface.getInstance();
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void init() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+        Field instance = Surface.class.getDeclaredField("instance");
+        instance.setAccessible(true);
+        instance.set(null, null);
     }
 
     @DisplayName("Surface's Lower Left Coordinates must be 0,0")
