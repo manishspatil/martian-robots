@@ -2,15 +2,11 @@ package com.manishpatil.martian.robots.commands;
 
 import com.manishpatil.martian.Coordinates;
 import com.manishpatil.martian.Surface;
-import com.manishpatil.martian.robots.commands.InitializeSurfaceCommand;
 import org.junit.jupiter.api.*;
 
-import java.io.File;
-import java.io.PrintStream;
 import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class InitializeSurfaceCommandTest {
@@ -34,12 +30,11 @@ class InitializeSurfaceCommandTest {
     @Order(1)
     void testExpectedExceptionWhenInvalidInstructionProvided() {
         InitializeSurfaceCommand command = new InitializeSurfaceCommand(Surface.getInstance(), "Foo bar");
-        Exception exception = Assertions.assertThrows(RuntimeException.class, () -> command.execute());
+        Exception exception = Assertions.assertThrows(RuntimeException.class, command::execute);
 
-        String expcetedMessage = "Invalid instruction provided for Initializing Surface. Correct instruction is the" +
+        String expcetedmessage = "Invalid instruction provided for Initializing Surface. Correct instruction is the" +
                 " upper-right coordinates of the Surface.";
-        assertEquals(expcetedMessage, exception.getMessage());
-        System.out.println(exception.getMessage());
+        assertEquals(expcetedmessage, exception.getMessage());
     }
 
     @DisplayName("Surface's initialization throws an exception while attempting to initialize Surface with Upper Right X " +
@@ -48,7 +43,8 @@ class InitializeSurfaceCommandTest {
     @Order(2)
     void testExpectedExceptionWithMoreThanAllowedUpperRightXCoordinate() {
         InitializeSurfaceCommand command = new InitializeSurfaceCommand(Surface.getInstance(), "51 1");
-        Exception exception = Assertions.assertThrows(RuntimeException.class, () -> command.execute());
+        Exception exception = Assertions.assertThrows(RuntimeException.class,
+                command::execute);
 
         assertEquals("Invalid coordinates provided for initializing Surface's sizing.", exception.getMessage());
     }
@@ -59,7 +55,7 @@ class InitializeSurfaceCommandTest {
     @Order(3)
     void testExpectedExceptionWithMoreThanAllowedUpperRightYCoordinate() {
         InitializeSurfaceCommand command = new InitializeSurfaceCommand(Surface.getInstance(), "1 51");
-        Exception exception = Assertions.assertThrows(RuntimeException.class, () -> command.execute());
+        Exception exception = Assertions.assertThrows(RuntimeException.class, command::execute);
 
         assertEquals("Invalid coordinates provided for initializing Surface's sizing.", exception.getMessage());
     }
@@ -85,9 +81,8 @@ class InitializeSurfaceCommandTest {
     @Order(5)
     void testExpectedExceptionForReInitialization() {
         InitializeSurfaceCommand command = new InitializeSurfaceCommand(Surface.getInstance(), "10 10");
-        Exception exception = Assertions.assertThrows(RuntimeException.class, () ->  command.execute());
+        Exception exception = Assertions.assertThrows(RuntimeException.class, command::execute);
 
         assertEquals("Surface does not support re-initialization.", exception.getMessage());
     }
-
 }

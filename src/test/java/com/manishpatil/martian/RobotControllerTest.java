@@ -14,12 +14,12 @@ class RobotControllerTest {
     private static final ByteArrayOutputStream pseudoOutputStream = new ByteArrayOutputStream();
     private static final PrintStream originalOutputStream = System.out;
 
-    private static String testFilePath = "";
+    private static String SampleInputFilePath;
 
     @BeforeAll
     static void init() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         File file = new File("src/test/resources/SampleInput.txt");
-        testFilePath = file.getAbsolutePath();
+        SampleInputFilePath = file.getAbsolutePath();
 
         System.setOut(new PrintStream(pseudoOutputStream));
 
@@ -27,9 +27,9 @@ class RobotControllerTest {
     }
 
     @BeforeEach
-    void setUp() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException{
-        System.err.println("In setup Reseting Surface");
+    void setUp() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         resetSurface();
+        pseudoOutputStream.reset();
     }
 
     private static void resetSurface() throws NoSuchFieldException, IllegalAccessException {
@@ -39,15 +39,16 @@ class RobotControllerTest {
     }
 
     @AfterAll
-    public static void cleanUp(){
+    public static void cleanUp() {
         System.setOut(originalOutputStream);
     }
 
     @Test
     void testRobotControllerForSampleInputs() {
-        RobotController.main(new String[] { testFilePath });
+        RobotController.main(new String[]{SampleInputFilePath});
 
-        assertEquals("", pseudoOutputStream.toString());
+        String expectedPositions = "1 1 E\r\n3 3 N LOST\r\n2 3 S\r\n";
+        assertEquals(expectedPositions, pseudoOutputStream.toString());
     }
 
     @Test
@@ -55,9 +56,10 @@ class RobotControllerTest {
         File file = new File("src/test/resources/SampleInputWithNoBlankLinks.txt");
         String sampleInputWithNoBlankLinks = file.getAbsolutePath();
 
-        RobotController.main(new String[] { sampleInputWithNoBlankLinks });
+        RobotController.main(new String[]{sampleInputWithNoBlankLinks});
 
-        assertEquals("", pseudoOutputStream.toString());
+        String expectedPositions = "1 1 E\r\n3 3 N LOST\r\n2 3 S\r\n";
+        assertEquals(expectedPositions, pseudoOutputStream.toString());
     }
 
     @Test
@@ -66,7 +68,7 @@ class RobotControllerTest {
         String invalidInputsFilePath = file.getAbsolutePath();
 
         Exception exception = Assertions.assertThrows(RuntimeException.class,
-                () -> RobotController.main(new String[] {invalidInputsFilePath}));
+                () -> RobotController.main(new String[]{invalidInputsFilePath}));
 
         assertEquals("Invalid coordinates provided for initializing Surface's sizing.", exception.getMessage());
     }

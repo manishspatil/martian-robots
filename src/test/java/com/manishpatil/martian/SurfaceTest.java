@@ -1,5 +1,6 @@
 package com.manishpatil.martian;
 
+import com.manishpatil.martian.robots.Robot;
 import org.junit.jupiter.api.*;
 
 import java.lang.reflect.Field;
@@ -13,6 +14,10 @@ class SurfaceTest {
 
     @BeforeAll
     static void init() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+        resetSurface();
+    }
+
+    private static void resetSurface() throws NoSuchFieldException, IllegalAccessException {
         Field instance = Surface.class.getDeclaredField("instance");
         instance.setAccessible(true);
         instance.set(null, null);
@@ -37,7 +42,7 @@ class SurfaceTest {
         Coordinates upperRightCoordinates = surface.getUpperRightCoordinates();
 
         assertTrue(surface.isInitialized(), "Surface's state is not initialized!");
-        assertEquals(0, lowerLeftCoordinates.getX(),"Lower Left X Coordinate is not equal to 0.");
+        assertEquals(0, lowerLeftCoordinates.getX(), "Lower Left X Coordinate is not equal to 0.");
         assertEquals(0, lowerLeftCoordinates.getY(), "Lower Left Y Coordinate is not equal to 0.");
         assertEquals(50, upperRightCoordinates.getX(), "Upper Right X Coordinate is not equal to 50.");
         assertEquals(50, upperRightCoordinates.getY(), "Upper Right Y Coordinate is not equal to 50.");
@@ -70,12 +75,26 @@ class SurfaceTest {
     }
 
     @Test
+    @Order(6)
     void placeRobot() {
-        // TODO: Need to Implement Robot
+        Robot robot = new Robot();
+        Coordinates coordinates = new Coordinates(20, 30);
+        robot.init(surface, coordinates, Direction.East);
+
+        assertEquals(1, surface.getPlacedRobots().size(), "Robot was not placed on Surface");
     }
 
     @Test
+    @Order(7)
     void getPlacedRobots() {
-        // TODO: Need to Implement Robots
+        Robot robot = new Robot();
+        Coordinates coordinates = new Coordinates(10, 10);
+        robot.init(surface, coordinates, Direction.East);
+
+        robot = new Robot();
+        coordinates = new Coordinates(20, 30);
+        robot.init(surface, coordinates, Direction.East);
+
+        assertEquals(3, surface.getPlacedRobots().size(), "Robots are not placed on Surface.");
     }
 }

@@ -19,7 +19,7 @@ public class Robot {
         if (surface == null)
             throw new RuntimeException("Robot needs surface to stand!");
 
-        if (surface != null && !surface.isOnGrid(coordinates))
+        if (!surface.isOnGrid(coordinates))
             throw new RuntimeException("Robot cannot initialised on Off-Grid coordinates.");
 
         if (direction == null)
@@ -29,6 +29,33 @@ public class Robot {
         this.surface.placeRobot(this);
         this.coordinates = coordinates;
         this.orientation = direction;
+    }
+
+    public void turnLeft() {
+        orientation = orientation.onLeft();
+    }
+
+    public void turnRight() {
+        orientation = orientation.onRight();
+    }
+
+    /**
+     * Moves the Robot in forward of the direction if it is on the Surface.
+     * <p>
+     * If resulting forward command leads to off grid then leaves a
+     * scent on grid.
+     */
+    public void moveForward() {
+        if (!surface.isScentPresent(coordinates, orientation)) {
+            Coordinates oldCoordinates = coordinates;
+            coordinates = orientation.moveForward(oldCoordinates);
+
+            // If Move leads Robot to go off grid then leave scent on grid
+            if (!isOnGrid()) {
+                moveOffCoordinates = oldCoordinates;
+                surface.markScent(oldCoordinates, orientation);
+            }
+        }
     }
 
     public boolean isOnGrid() {

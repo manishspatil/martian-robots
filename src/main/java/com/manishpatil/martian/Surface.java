@@ -2,9 +2,7 @@ package com.manishpatil.martian;
 
 import com.manishpatil.martian.robots.Robot;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Surface empowers with methods to set it's size and to check whether a coordinate is On the Grid or not.
@@ -20,6 +18,7 @@ public class Surface {
     private Coordinates lowerLeftCoordinates = new Coordinates(0, 0);
     private Coordinates upperRightCoordinates;
 
+    private Set<Scent> scents = new HashSet<>();
     private List<Robot> robots = new LinkedList<>();
 
     private Surface() {
@@ -42,7 +41,6 @@ public class Surface {
     }
 
     public void init(int upperRightX, int upperRightY) {
-        System.err.println("In Surface.init");
         if (isInitialized()) {
             throw new RuntimeException("Surface does not support re-initialization.");
         }
@@ -67,6 +65,15 @@ public class Surface {
     public List<Robot> getPlacedRobots() {
         return Collections.unmodifiableList(robots);
     }
+
+    public void markScent(Coordinates coordinates, Direction direction) {
+        scents.add(new Scent(coordinates, direction));
+    }
+
+    public boolean isScentPresent(Coordinates coordinates, Direction direction) {
+        return scents.contains(new Scent(coordinates, direction));
+    }
+
 
     private void setSize(int upperRightX, int upperRightY) {
         if (isSizeValid(upperRightX, upperRightY)) {

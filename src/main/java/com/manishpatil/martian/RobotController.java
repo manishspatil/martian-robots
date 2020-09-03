@@ -8,9 +8,7 @@ import java.util.List;
 public class RobotController {
 
     public static void main(String[] args) {
-        System.err.println("In Main");
         Surface surface = Surface.getInstance();
-        System.err.println("In Main Got surface");
         Controller controller;
 
         // Ideally could have implemented to accept inputs from console in case absence of file.

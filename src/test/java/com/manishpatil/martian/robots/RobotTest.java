@@ -3,9 +3,13 @@ package com.manishpatil.martian.robots;
 import com.manishpatil.martian.Coordinates;
 import com.manishpatil.martian.Direction;
 import com.manishpatil.martian.Surface;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,10 +25,6 @@ class RobotTest {
 
         surface = Surface.getInstance();
         surface.init(50, 50);
-    }
-    
-    @AfterEach
-    void tearDown() {
     }
 
     @DisplayName("Robot's initialization must correctly initialize.")
@@ -75,5 +75,130 @@ class RobotTest {
 
     @Test
     void getPosition() {
+        Robot robot = new Robot();
+        Coordinates coordinates = new Coordinates(10, 20);
+        robot.init(surface, coordinates, Direction.East);
+
+        String expectedPosition = "10 20 E";
+
+        assertEquals(expectedPosition, robot.getPosition(), "Robot is not is not correct Position!");
     }
+
+    @Test
+    void testTurnLeft() {
+        Robot robot = new Robot();
+        Coordinates coordinates = new Coordinates(10, 20);
+        robot.init(surface, coordinates, Direction.East);
+
+        robot.turnLeft();
+
+        String expectedPosition = "10 20 N";
+        assertEquals(expectedPosition, robot.getPosition(), "Robot did not turn Left correctly!");
+    }
+
+    @Test
+    void testTurnRight() {
+        Robot robot = new Robot();
+        Coordinates coordinates = new Coordinates(10, 20);
+        robot.init(surface, coordinates, Direction.East);
+
+        robot.turnRight();
+
+        String expectedPosition = "10 20 S";
+        assertEquals(expectedPosition, robot.getPosition(), "Robot did not turn Right correctly!");
+    }
+
+    @Test
+    void testMoveForwardTowardsEast() {
+        Robot robot = new Robot();
+        Coordinates coordinates = new Coordinates(10, 20);
+        robot.init(surface, coordinates, Direction.East);
+
+        robot.moveForward();
+
+        String expectedPosition = "11 20 E";
+        assertEquals(expectedPosition, robot.getPosition(), "Robot did not Move Forward correctly towards East!");
+    }
+
+    @Test
+    void testMoveForwardTowardsWest() {
+        Robot robot = new Robot();
+        Coordinates coordinates = new Coordinates(10, 20);
+        robot.init(surface, coordinates, Direction.West);
+
+        robot.moveForward();
+
+        String expectedPosition = "9 20 W";
+        assertEquals(expectedPosition, robot.getPosition(), "Robot did not Move Forward correctly towards West!");
+    }
+
+    @Test
+    void testMoveForwardTowardsSouth() {
+        Robot robot = new Robot();
+        Coordinates coordinates = new Coordinates(10, 20);
+        robot.init(surface, coordinates, Direction.South);
+
+        robot.moveForward();
+
+        String expectedPosition = "10 19 S";
+        assertEquals(expectedPosition, robot.getPosition(), "Robot did not Move Forward correctly towards South!");
+    }
+
+    @Test
+    void testMoveForwardTowardsNorth() {
+        Robot robot = new Robot();
+        Coordinates coordinates = new Coordinates(10, 20);
+        robot.init(surface, coordinates, Direction.North);
+
+        robot.moveForward();
+
+        String expectedPosition = "10 21 N";
+        assertEquals(expectedPosition, robot.getPosition(), "Robot did not Move Forward correctly towards North!");
+    }
+
+    @Test
+    void testMoveForwardOffTheGrid() {
+        Robot robot = new Robot();
+        Coordinates coordinates = new Coordinates(0, 50);
+        robot.init(surface, coordinates, Direction.West);
+
+        robot.moveForward();
+
+        assertFalse(robot.isOnGrid(), "Robot did not Move Off the Grid!");
+    }
+
+    @Test
+    void testMoveForwardOffTheGridDoesNotMoveDueToPreviousScent() {
+        Robot robot = new Robot();
+        Coordinates coordinates = new Coordinates(0, 49);
+        robot.init(surface, coordinates, Direction.West);
+
+        robot.moveForward();
+
+        Robot robot2 = new Robot();
+        coordinates = new Coordinates(0, 49);
+        robot2.init(surface, coordinates, Direction.West);
+
+        robot2.moveForward();
+
+        System.out.println(robot2.getPosition());
+        System.out.println(robot2.isOnGrid());
+
+        assertTrue(robot2.isOnGrid(), "Robot moved Off the Grid despite of Scent!");
+    }
+
+    @Test
+    void testMoveForwardOffTheGridShouldReportLastPosition() {
+        Robot robot = new Robot();
+        Coordinates coordinates = new Coordinates(0, 0);
+        robot.init(surface, coordinates, Direction.South);
+
+        robot.moveForward();
+
+        String expectedPosition = "0 0 S LOST";
+
+        assertTrue(!robot.isOnGrid() && expectedPosition.equals(robot.getPosition()),
+                "Robot did not report last position corrected Move Off the Grid!");
+    }
+
 }
